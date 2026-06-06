@@ -1,0 +1,1783 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>保险柜 iPhone17 原型</title>
+  <style>
+    :root {
+      --w: 402px;
+      --h: 874px;
+      --bg: #f4f6fb;
+      --card: #fff;
+      --line: #edf0f5;
+      --text: #171b22;
+      --muted: #8a909b;
+      --green: #22cdb2;
+      --blue: #2d9bf7;
+      --deep: #113358;
+      --orange: #ff7b3d;
+      --yellow: #f8cc37;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: block;
+      background: #e9edf4;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+    }
+    .screen {
+      width: var(--w);
+      height: var(--h);
+      overflow: hidden;
+      position: relative;
+      background: var(--bg);
+    }
+    .status {
+      height: 50px;
+      padding: 22px 34px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      font-size: 16px;
+      font-weight: 800;
+      color: #05070a;
+      letter-spacing: 0;
+    }
+    .icons { display: flex; align-items: center; gap: 8px; }
+    .status-svg {
+      width: 22px;
+      height: 18px;
+      color: #05070a;
+    }
+    .battery {
+      background: #101214;
+      color: #fff;
+      border-radius: 6px;
+      padding: 0 6px;
+      font-size: 13px;
+      line-height: 20px;
+      font-weight: 800;
+    }
+    .battery.green { background: #33d45f; }
+    .nav {
+      height: 56px;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 40px 1fr 40px;
+      align-items: center;
+    }
+    .editor-nav {
+      height: 56px;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 40px 1fr 94px;
+      align-items: center;
+    }
+    .title {
+      text-align: center;
+      font-size: 23px;
+      font-weight: 720;
+    }
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      display: grid;
+      place-items: center;
+      color: #15191f;
+    }
+    .nav-confirm {
+      color: #22bda6;
+      font-size: 15px;
+      font-weight: 760;
+      white-space: nowrap;
+    }
+    .content { padding: 0 20px 24px; }
+    svg { display: block; }
+
+    /* My page entry */
+    .me-bg {
+      background:
+        radial-gradient(circle at 20% 5%, rgba(253, 207, 255, .72), transparent 28%),
+        radial-gradient(circle at 58% 1%, rgba(197, 246, 255, .8), transparent 33%),
+        linear-gradient(180deg, #fbfbff 0%, #f3f6fb 56%, #f4f6fb 100%);
+    }
+    .gear {
+      position: absolute;
+      right: 38px;
+      top: 88px;
+      width: 28px;
+      height: 28px;
+      border: 3px solid #1b1f26;
+      border-radius: 9px;
+      transform: rotate(30deg);
+    }
+    .gear:after {
+      content: "";
+      position: absolute;
+      inset: 7px;
+      border: 3px solid #1b1f26;
+      border-radius: 50%;
+    }
+    .profile {
+      display: grid;
+      grid-template-columns: 92px 1fr 28px;
+      gap: 18px;
+      align-items: center;
+      padding: 68px 20px 0;
+    }
+    .avatar {
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      background: #bff3e9;
+      position: relative;
+      overflow: hidden;
+    }
+    .avatar:before {
+      content: "";
+      position: absolute;
+      width: 56px;
+      height: 44px;
+      left: 20px;
+      top: 18px;
+      border-radius: 55% 45% 42% 45%;
+      background: #101214;
+      box-shadow: -11px 13px 0 #101214;
+    }
+    .avatar:after {
+      content: "";
+      position: absolute;
+      width: 58px;
+      height: 62px;
+      left: 17px;
+      bottom: -18px;
+      border-radius: 28px 28px 20px 20px;
+      background: #fff;
+      border: 3px solid #101214;
+      border-bottom: 0;
+      box-shadow: inset 0 -14px 0 #f7f7f7;
+    }
+    .person-face {
+      position: absolute;
+      width: 38px;
+      height: 34px;
+      left: 28px;
+      top: 40px;
+      border-radius: 45%;
+      background: #fff;
+      z-index: 2;
+    }
+    .person-face:before,
+    .person-face:after {
+      content: "";
+      position: absolute;
+      top: 14px;
+      width: 4px;
+      height: 4px;
+      background: #101214;
+      border-radius: 50%;
+    }
+    .person-face:before { left: 11px; }
+    .person-face:after { right: 11px; }
+    .profile h1 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.1;
+      font-weight: 800;
+    }
+    .verify {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      margin-left: 8px;
+      padding: 6px 10px;
+      border-radius: 9px;
+      background: rgba(199, 250, 240, .84);
+      color: #21bfa7;
+      font-size: 15px;
+      vertical-align: 4px;
+      font-weight: 720;
+    }
+    .pill-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .mini-pill {
+      padding: 6px 10px;
+      border-radius: 12px;
+      background: #eef1f5;
+      color: #69717e;
+      font-size: 14px;
+      line-height: 1;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      text-align: center;
+      margin: 46px 0 22px;
+    }
+    .stats strong {
+      display: block;
+      font-size: 33px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .stats span {
+      color: #606772;
+      font-size: 17px;
+    }
+    .entry-card {
+      height: 160px;
+      margin: 0 20px 14px;
+      border-radius: 16px;
+      background: linear-gradient(100deg, #ffffff 0%, #f5fbff 58%, #e8f6ff 100%);
+      box-shadow: 0 10px 24px rgba(22, 35, 58, .04);
+      position: relative;
+      overflow: hidden;
+      padding: 22px 20px;
+    }
+    .entry-card h2 {
+      margin: 0 0 12px;
+      font-size: 24px;
+      font-weight: 800;
+    }
+    .entry-card p {
+      margin: 0 0 12px;
+      color: #6a7180;
+      font-size: 15px;
+      line-height: 1.35;
+      max-width: 190px;
+    }
+    .blue-btn {
+      width: 122px;
+      height: 38px;
+      border-radius: 22px;
+      background: #2d9bf7;
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 17px;
+      font-weight: 760;
+    }
+    .safe-asset {
+      position: absolute;
+      right: 11px;
+      top: 16px;
+      width: 144px;
+      height: 118px;
+      overflow: visible;
+    }
+    .unlock-safe {
+      position: relative;
+      inset: auto;
+      width: 156px;
+      height: 128px;
+      margin: 16px auto 6px;
+    }
+    .menu-card {
+      margin: 12px 20px;
+      border-radius: 16px;
+      background: #fff;
+      overflow: hidden;
+    }
+    .menu-card.single {
+      margin-bottom: 14px;
+    }
+    .menu-row {
+      height: 62px;
+      display: grid;
+      grid-template-columns: 42px 1fr 24px;
+      gap: 16px;
+      align-items: center;
+      padding: 0 18px;
+      border-bottom: 1px solid #f0f2f6;
+      font-size: 20px;
+      font-weight: 720;
+    }
+    .menu-row:last-child { border-bottom: 0; }
+    .menu-row span { color: #a0a6af; font-size: 26px; }
+    .line-icon {
+      width: 28px;
+      height: 28px;
+      color: var(--orange);
+    }
+    .line-icon.yellow { color: var(--yellow); }
+    .line-icon.green { color: var(--green); }
+    .tabbar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 82px;
+      background: rgba(255,255,255,.92);
+      box-shadow: 0 -9px 24px rgba(20, 31, 50, .08);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr) 98px;
+      align-items: center;
+      padding: 6px 16px 10px;
+      border-radius: 18px 18px 0 0;
+    }
+    .tab {
+      text-align: center;
+      font-size: 13px;
+      color: #20242b;
+      font-weight: 700;
+      display: grid;
+      justify-items: center;
+      gap: 4px;
+    }
+    .tab.active { color: var(--green); }
+    .tab svg {
+      width: 27px;
+      height: 27px;
+      color: currentColor;
+    }
+    .compose {
+      position: absolute;
+      right: 30px;
+      bottom: 26px;
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      background: #111;
+      box-shadow: 0 10px 28px rgba(0,0,0,.22);
+      display: grid;
+      place-items: center;
+      color: #fff;
+    }
+
+    /* Common vault screens */
+    .vault-bg { background: #f5f7fb; }
+    .security-banner {
+      margin: 8px 20px 12px;
+      height: 56px;
+      border-radius: 14px;
+      background: #fff;
+      display: grid;
+      grid-template-columns: 38px 1fr 18px;
+      gap: 10px;
+      align-items: center;
+      padding: 0 14px;
+    }
+    .shield {
+      width: 30px;
+      height: 34px;
+      border-radius: 15px 15px 19px 19px;
+      background: linear-gradient(160deg, #2fc0ff, #2174e8);
+      position: relative;
+    }
+    .shield:after {
+      content: "";
+      position: absolute;
+      left: 9px;
+      top: 11px;
+      width: 11px;
+      height: 6px;
+      border-left: 3px solid #fff;
+      border-bottom: 3px solid #fff;
+      transform: rotate(-45deg);
+    }
+    .security-banner strong { font-size: 15px; }
+    .security-banner small { display: block; margin-top: 3px; color: #8a909b; font-size: 11px; }
+    .chips {
+      display: flex;
+      gap: 8px;
+      overflow: hidden;
+      padding: 0 20px 12px;
+    }
+    .chip {
+      height: 31px;
+      padding: 0 12px;
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid #e2e7ee;
+      display: grid;
+      place-items: center;
+      color: #5c6572;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    .chip.active { background: #14325b; color: #fff; border-color: #14325b; }
+    .list-title {
+      padding: 0 20px 10px;
+      display: flex;
+      justify-content: space-between;
+      color: #7b8492;
+      font-size: 13px;
+    }
+    .filter {
+      padding: 6px 10px;
+      border-radius: 16px;
+      background: #fff;
+      color: #4c5868;
+      border: 1px solid #e2e7ee;
+    }
+    .folder-tools {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .folder-delete {
+      padding: 6px 10px;
+      border-radius: 16px;
+      background: #fff4f4;
+      color: #d94747;
+      border: 1px solid #ffe0e0;
+    }
+    .vault-list { padding: 0 20px; }
+    .vault-row {
+      height: 78px;
+      border-radius: 16px;
+      background: #fff;
+      margin-bottom: 10px;
+      display: grid;
+      grid-template-columns: 48px 1fr 34px;
+      align-items: center;
+      gap: 12px;
+      padding: 0 12px;
+    }
+    .vault-row:active,
+    .action:active,
+    .file-choice:active,
+    .media-tile:active {
+      transform: scale(.992);
+    }
+    .thumb {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: #e9f3ff;
+      position: relative;
+      display: grid;
+      place-items: center;
+      color: #5aa7f7;
+      font-size: 20px;
+      font-weight: 800;
+    }
+    .thumb.photo,
+    .thumb.video {
+      background:
+        linear-gradient(135deg, rgba(45,155,247,.18), rgba(34,205,178,.16)),
+        radial-gradient(circle at 30% 30%, #ffdf9c, transparent 26%),
+        radial-gradient(circle at 72% 28%, #9fd6ff, transparent 28%),
+        linear-gradient(135deg, #c7f1e8, #eaf5ff);
+      color: transparent;
+      overflow: hidden;
+    }
+    .thumb.photo:after {
+      content: "";
+      position: absolute;
+      left: 7px;
+      right: 7px;
+      bottom: 9px;
+      height: 15px;
+      border-radius: 12px 12px 6px 6px;
+      background: rgba(14, 91, 181, .24);
+      transform: skewX(-14deg);
+    }
+    .thumb.lock:before {
+      content: "";
+      position: absolute;
+      width: 21px;
+      height: 17px;
+      bottom: 10px;
+      border-radius: 5px;
+      background: #5aa7f7;
+    }
+    .thumb.lock:after {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 16px;
+      top: 10px;
+      border: 3px solid #5aa7f7;
+      border-bottom: 0;
+      border-radius: 11px 11px 0 0;
+    }
+    .row-copy strong { display: block; font-size: 16px; margin-bottom: 7px; }
+    .row-copy span { color: #8a909b; font-size: 13px; }
+    .masked { letter-spacing: 2px; }
+    .eye { color: #7a8492; }
+    .eye-btn {
+      width: 40px;
+      height: 54px;
+      border: 0;
+      background: transparent;
+      color: #7a8492;
+      display: grid;
+      place-items: center;
+      padding: 0;
+    }
+    .hint {
+      margin: 10px 20px 0;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #eef7ff;
+      color: #4f667e;
+      font-size: 12px;
+    }
+    .empty-state {
+      margin: 74px 20px 0;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: #8a909b;
+    }
+    .empty-icon {
+      width: 72px;
+      height: 58px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #eff7ff, #e8f2ff);
+      position: relative;
+      margin-bottom: 18px;
+    }
+    .empty-icon:before {
+      content: "";
+      position: absolute;
+      left: 14px;
+      top: 17px;
+      width: 44px;
+      height: 30px;
+      border-radius: 9px;
+      background: #5aa7f7;
+      opacity: .85;
+    }
+    .empty-icon:after {
+      content: "+";
+      position: absolute;
+      left: 27px;
+      top: 9px;
+      color: #fff;
+      font-size: 31px;
+      font-weight: 600;
+    }
+    .empty-state strong {
+      color: #1d2430;
+      font-size: 17px;
+      margin-bottom: 6px;
+    }
+    .sheet-scrim {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.28);
+    }
+    .bottom-sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fff;
+      border-radius: 28px 28px 0 0;
+      padding: 14px 20px 26px;
+    }
+    .grab { width: 42px; height: 4px; border-radius: 99px; background: #d8dde6; margin: 0 auto 16px; }
+    .sheet-title { text-align: center; font-size: 18px; font-weight: 760; margin-bottom: 14px; }
+    .folder-label {
+      font-size: 14px;
+      color: #667386;
+      margin: 0 0 8px;
+    }
+    .folder-input {
+      width: 100%;
+      height: 48px;
+      border: 1px solid #e2e7ee;
+      border-radius: 14px;
+      background: #f8fbff;
+      color: #1d2430;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      margin-bottom: 8px;
+      font-size: 15px;
+      outline: none;
+      box-sizing: border-box;
+    }
+    .folder-input:focus {
+      border-color: #2d9bf7;
+      box-shadow: 0 0 0 3px rgba(45,155,247,.12);
+    }
+    .folder-error {
+      min-height: 18px;
+      color: #d94747;
+      font-size: 12px;
+      margin-bottom: 10px;
+      opacity: 0;
+    }
+    .folder-error.show {
+      opacity: 1;
+    }
+    .sheet-primary {
+      width: 100%;
+      height: 44px;
+      border: 0;
+      border-radius: 24px;
+      background: #2d9bf7;
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      font-weight: 760;
+    }
+    .action {
+      height: 62px;
+      border-radius: 15px;
+      border: 1px solid #edf0f5;
+      background: #fbfdff;
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 0 13px;
+      margin-bottom: 9px;
+    }
+    .action-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 13px;
+      background: #eef8ff;
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+    }
+    .action strong { font-size: 15px; }
+    .action small { display: block; color: #8993a1; margin-top: 3px; }
+    .limit { text-align: center; color: #8993a1; font-size: 12px; margin-top: 8px; }
+    .editor-toolbar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 150px;
+      background: #fff;
+      border-top: 1px solid #eef1f5;
+      padding: 12px 22px;
+    }
+    .format-line { height: 34px; display: flex; gap: 20px; color: #5d6775; align-items: center; }
+    .tool-grid { display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; padding-top: 16px; }
+    .tool { font-size: 13px; color: #4f5966; }
+    .tool .tool-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: #e9fbf8;
+      color: var(--green);
+      display: grid;
+      place-items: center;
+      margin: 0 auto 7px;
+    }
+    .input-line {
+      margin: 0 24px;
+      border: 0;
+      color: #b0b7c2;
+      font-size: 15px;
+    }
+    .textarea {
+      margin: 20px 24px;
+      height: 210px;
+      color: #b0b7c2;
+      font-size: 15px;
+    }
+    .checkmark { color: #c8ccd2; }
+    .editor-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: flex-end;
+      align-items: center;
+      color: #20242b;
+    }
+    .editor-actions svg {
+      width: 21px;
+      height: 21px;
+    }
+    .editor-actions .disabled { color: #c8ccd2; }
+    .batch-row {
+      grid-template-columns: 28px 48px 1fr;
+    }
+    .check {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid #c9d3e2;
+    }
+    .check.on { background: var(--blue); border-color: var(--blue); }
+    .batch-actions {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      bottom: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .batch-actions div {
+      height: 44px;
+      border-radius: 24px;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      font-weight: 760;
+    }
+    .move { background: #e8f3ff; color: #1669bf; }
+    .delete { background: #fff0f0; color: #d94747; }
+    .detail-card {
+      margin: 10px 20px;
+      background: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    .detail-cover {
+      height: 170px;
+      background: linear-gradient(135deg, #dbeafe, #f8fafc);
+      display: grid;
+      place-items: center;
+    }
+    .doc-card {
+      width: 75px;
+      height: 94px;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 12px 28px rgba(15,23,42,.1);
+    }
+    .detail-body { padding: 16px; }
+    .detail-body h2 { margin: 0 0 11px; font-size: 22px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+    .tag { background: #f1f4f8; color: #657180; border-radius: 14px; padding: 6px 9px; font-size: 12px; }
+    .detail-text { color: #3b4756; line-height: 1.75; font-size: 15px; }
+    .detail-imgs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+    .detail-imgs div { height: 72px; border-radius: 12px; background: linear-gradient(135deg,#cfe8ff,#fff4c8); }
+    .picker-page {
+      background: #f5f7fb;
+    }
+    .picker-grid {
+      padding: 16px 20px 88px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+    .media-tile {
+      height: 116px;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 28% 28%, rgba(255,226,151,.9), transparent 25%),
+        radial-gradient(circle at 76% 23%, rgba(147,210,255,.9), transparent 25%),
+        linear-gradient(135deg, #b6eadf, #e9f5ff);
+    }
+    .media-tile:nth-child(2n) { background: linear-gradient(135deg, #dbeafe, #f7d7df); }
+    .media-tile:nth-child(3n) { background: linear-gradient(135deg, #fde68a, #bae6fd); }
+    .media-tile.video:after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-40%, -50%);
+      border-left: 18px solid rgba(255,255,255,.9);
+      border-top: 12px solid transparent;
+      border-bottom: 12px solid transparent;
+    }
+    .media-check {
+      position: absolute;
+      right: 6px;
+      top: 6px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.86);
+      background: rgba(0,0,0,.16);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .media-tile.on .media-check {
+      background: var(--green);
+      border-color: var(--green);
+    }
+    .media-folder-toggle {
+      min-height: 52px;
+      margin: 0 20px 10px;
+      border-radius: 15px;
+      background: #fff;
+      border: 1px solid #e5ebf2;
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+    }
+    .media-folder-toggle strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+    .media-folder-toggle span {
+      color: #7d8794;
+      font-size: 12px;
+    }
+    .target-folder-row {
+      min-height: 52px;
+      margin: 0 20px 10px;
+      border-radius: 15px;
+      background: #fff;
+      border: 1px solid #e5ebf2;
+      display: grid;
+      grid-template-columns: 42px 1fr 18px;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+    }
+    .target-folder-row label {
+      display: block;
+      color: #7d8794;
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+    .target-folder-row strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 760;
+    }
+    .media-folder-input {
+      width: 100%;
+      height: 30px;
+      border: 0;
+      border-bottom: 1px solid #e3e8ef;
+      outline: none;
+      color: #1d2430;
+      font-size: 14px;
+      background: transparent;
+      margin-top: 3px;
+    }
+    .square-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 8px;
+      border: 2px solid #c9d3e2;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 900;
+    }
+    .square-check.on {
+      background: var(--green);
+      border-color: var(--green);
+    }
+    .picker-bottom {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 72px;
+      background: rgba(255,255,255,.94);
+      border-top: 1px solid #e9edf4;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      color: #6b7480;
+      font-size: 13px;
+    }
+    .picker-submit {
+      width: 138px;
+      height: 42px;
+      border: 0;
+      border-radius: 22px;
+      background: #2d9bf7;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 760;
+    }
+    .file-choice-list {
+      padding: 18px 20px;
+    }
+    .file-choice {
+      height: 78px;
+      border-radius: 16px;
+      background: #fff;
+      border: 1px solid #edf0f5;
+      display: grid;
+      grid-template-columns: 46px 1fr 18px;
+      gap: 12px;
+      align-items: center;
+      padding: 0 12px;
+      margin-bottom: 10px;
+    }
+    .file-choice.selectable {
+      grid-template-columns: 24px 46px 1fr 18px;
+    }
+    .select-circle {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid #c9d3e2;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .select-circle.on {
+      background: #2d9bf7;
+      border-color: #2d9bf7;
+    }
+    .file-choice strong { display: block; font-size: 15px; margin-bottom: 6px; }
+    .file-choice span { color: #8a909b; font-size: 13px; }
+    .dialog {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.28);
+      display: grid;
+      place-items: center;
+      padding: 0 38px;
+    }
+    .dialog-card {
+      width: 100%;
+      border-radius: 22px;
+      background: #fff;
+      padding: 24px 20px 18px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,.18);
+    }
+    .dialog-card strong { display: block; font-size: 18px; margin-bottom: 10px; }
+    .dialog-card p { margin: 0 0 18px; color: #7a8492; font-size: 14px; line-height: 1.55; }
+    .dialog-card button {
+      width: 100%;
+      height: 42px;
+      border: 0;
+      border-radius: 22px;
+      background: #2d9bf7;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 760;
+    }
+    .dialog-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .dialog-actions button {
+      width: auto;
+      margin: 0;
+    }
+    .dialog-actions .secondary {
+      background: #f2f5f9;
+      color: #566273;
+    }
+    .dialog-actions .danger {
+      background: #fff0f0;
+      color: #d94747;
+    }
+    .form-stack {
+      padding: 22px 20px;
+    }
+    .form-card {
+      min-height: 64px;
+      border-radius: 16px;
+      background: #fff;
+      margin-bottom: 14px;
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      align-items: center;
+      padding: 0 18px;
+      box-shadow: 0 8px 20px rgba(18, 31, 52, .03);
+    }
+    .form-card label {
+      color: #5c6572;
+      font-size: 17px;
+    }
+    .form-card strong {
+      font-size: 18px;
+      font-weight: 500;
+    }
+    .code-card {
+      grid-template-columns: 92px 1fr auto;
+      column-gap: 12px;
+    }
+    .code-placeholder {
+      color: #b0b7c2;
+      font-size: 16px;
+    }
+    .code-action {
+      border-left: 1px solid #eef1f5;
+      padding-left: 18px;
+      color: #22bda6;
+      font-size: 16px;
+      font-weight: 760;
+      white-space: nowrap;
+    }
+    .sent-tip {
+      margin: 2px 4px 170px;
+      color: #7a8492;
+      font-size: 13px;
+    }
+    .next-btn {
+      height: 58px;
+      border-radius: 29px;
+      background: #84ded0;
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      font-weight: 740;
+    }
+    .toast {
+      position: absolute;
+      left: 50%;
+      bottom: 92px;
+      transform: translateX(-50%);
+      background: rgba(21, 25, 31, .86);
+      color: #fff;
+      border-radius: 22px;
+      padding: 10px 16px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    .security-page {
+      background: linear-gradient(180deg, #cfe9ff, #eef7ff 52%, #fff);
+    }
+    .security-hero { display: grid; place-items: center; height: 178px; }
+    .big-shield {
+      width: 104px;
+      height: 104px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.54);
+      display: grid;
+      place-items: center;
+    }
+    .big-shield .shield { transform: scale(1.8); }
+    .security-card {
+      margin: 0 20px 12px;
+      padding: 15px;
+      background: rgba(255,255,255,.82);
+      border: 1px solid rgba(214,230,248,.95);
+      border-radius: 16px;
+      line-height: 1.55;
+    }
+    .security-card strong { display: block; margin-bottom: 6px; font-size: 15px; }
+    .security-card p { margin: 0; color: #45566b; font-size: 13px; }
+    button,
+    .entry-card,
+    .security-banner,
+    .vault-row,
+    .chip,
+    .action,
+    .sheet-scrim,
+    .batch-actions div {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="screen" id="app"></div>
+  <script>
+    const initialScreen = new URLSearchParams(location.search).get("screen") || "entry";
+    const app = document.getElementById("app");
+    let currentScreen = initialScreen;
+    let passcodeCount = 0;
+    let routeStack = [initialScreen];
+    let pressTimer = 0;
+    let longPressFired = false;
+    const icons = `<svg class="status-svg" viewBox="0 0 24 18" fill="none"><rect x="2" y="10" width="3" height="6" rx="1.5" fill="currentColor"/><rect x="8" y="7" width="3" height="9" rx="1.5" fill="currentColor"/><rect x="14" y="4" width="3" height="12" rx="1.5" fill="currentColor"/><rect x="20" y="1" width="3" height="15" rx="1.5" fill="#c7ccd4"/></svg><svg class="status-svg" viewBox="0 0 24 18" fill="none"><path d="M3 6.5C8.2 2 15.8 2 21 6.5" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M7 10.2c3-2.4 7-2.4 10 0" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M11.2 14.2h1.6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg><span class="battery">92</span>`;
+    const status = `<div class="status"><span>14:31</span><div class="icons">${icons}</div></div>`;
+    const back = `<svg width="27" height="27" viewBox="0 0 24 24" fill="none"><path d="M19 12H5" stroke="currentColor" stroke-width="2.25" stroke-linecap="round"/><path d="M12 5l-7 7 7 7" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const plus = `<svg width="27" height="27" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/></svg>`;
+    const more = `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 12h.01M12 12h.01M19 12h.01" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>`;
+    const eyeClosed = `<svg width="25" height="25" viewBox="0 0 24 24" fill="none"><path d="M3 3l18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6.7 6.9C4 8.6 2.5 12 2.5 12s3.5 6 9.5 6c1.5 0 2.9-.4 4.1-1M10.8 6.2c.4-.1.8-.2 1.2-.2 6 0 9.5 6 9.5 6a14.5 14.5 0 01-2.8 3.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+    const eyeOpen = `<svg width="25" height="25" viewBox="0 0 24 24" fill="none"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.6" fill="currentColor"/></svg>`;
+    const nav = (title, right = "", left = back) => `${status}<div class="nav"><button class="icon-btn nav-left" aria-label="返回">${left}</button><div class="title">${title}</div><button class="icon-btn nav-right">${right}</button></div>`;
+    const banner = `<div class="security-banner"><div class="shield"></div><div><strong>12项数据安全保护中</strong><small>双重密码、银行级加密、异常拦截</small></div><span style="color:#9aa3af">›</span></div>`;
+    const folders = ["全部", "默认"];
+    let selectedFolder = "全部";
+    let activeItemId = "backup";
+    let selectedType = "all";
+    let fileDialog = "";
+    let fileToast = false;
+    let mediaCreateDatedFolder = false;
+    let folderDraft = "";
+    let folderError = "";
+    let moveSource = "batch";
+    let deleteSource = "detail";
+    let deleteFolderName = "";
+    let editorSource = "add";
+    let renameDraft = "";
+    let renameError = "";
+    let uploadTargetFolder = "默认";
+    let folderCreateMode = "list";
+    let folderPickerReturn = "filePicker";
+    let mediaFolderDraft = "";
+    const revealedItems = new Set();
+    const mediaSelection = new Set([1, 3]);
+    const fileSelection = new Set();
+    const batchSelectedIds = ["idcard", "contract"];
+    const items = [
+      { id: "idcard", title: "身份证照片", type: "media", folder: "默认", meta: "图片 · 2张 · 默认 · 5月12日", thumb: "photo", body: "" },
+      { id: "travel", title: "旅行照片", type: "media", folder: "默认", meta: "图片/视频 · 9项 · 默认 · 5月10日", thumb: "photo", body: "" },
+      { id: "contract", title: "购房合同.pdf", type: "file", folder: "默认", meta: "PDF · 2.4 MB · 默认 · 5月8日", body: "合同编号：HT2026-001\n签署日期：2026年5月8日\n备注：首付款与交付节点已标注。" },
+      { id: "health", title: "体检报告.pdf", type: "file", folder: "默认", meta: "PDF · 4.8 MB · 默认 · 4月28日", body: "年度体检报告，默认脱敏。" },
+      { id: "backup", title: "备用账号", type: "text", folder: "默认", meta: "图文 · 126字 · 2张图 · 默认 · 5月12日", body: "账号：demo-user\n备用邮箱：safe@example.com\n备注：常用登录信息与恢复方式。" },
+      { id: "note", title: "私密图文", type: "text", folder: "默认", meta: "图文 · 240字 · 4张图 · 默认 · 5月9日", body: "这是一段只给自己看的图文记录，支持文本和最多 9 张图。" }
+    ];
+    const typeLabels = { all: "全部类型", media: "图片/视频", text: "图文", file: "文件" };
+    const uploadFolderName = () => {
+      const date = new Date();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${date.getFullYear()}${month}${day}`;
+    };
+    const currentMediaFolderName = () => normalizeFolderName(mediaFolderDraft || uploadFolderName());
+    const ensureFolder = (folder) => {
+      if (!folders.includes(folder)) folders.push(folder);
+    };
+    const targetContentFolder = () => selectedFolder === "全部" ? "默认" : selectedFolder;
+    const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "\"": "&quot;",
+      "'": "&#39;"
+    }[char]));
+    const normalizeFolderName = (value) => value.trim().replace(/\s+/g, " ");
+    const folderExists = (name) => folders.some(folder => folder.toLowerCase() === name.toLowerCase());
+    const syncItemFolder = (item, folder) => {
+      item.folder = folder;
+      const parts = item.meta.split(" · ");
+      const folderIndex = parts.findIndex(part => folders.includes(part));
+      if (folderIndex >= 0) parts[folderIndex] = folder;
+      else if (parts.length > 2) parts[parts.length - 2] = folder;
+      item.meta = parts.join(" · ");
+    };
+    const moveItemsToFolder = (ids, folder) => {
+      ids.forEach(id => {
+        const item = items.find(entry => entry.id === id);
+        if (item) syncItemFolder(item, folder);
+      });
+      selectedFolder = folder;
+      selectedType = "all";
+    };
+    const removeItemIds = (ids) => {
+      ids.forEach(id => {
+        const index = items.findIndex(item => item.id === id);
+        if (index >= 0) items.splice(index, 1);
+        revealedItems.delete(id);
+      });
+      if (!items.some(item => item.id === activeItemId)) activeItemId = items[0]?.id || "";
+    };
+    const deleteCustomFolder = (folderName) => {
+      items.forEach(item => {
+        if (item.folder === folderName) syncItemFolder(item, "默认");
+      });
+      const index = folders.indexOf(folderName);
+      if (index >= 0) folders.splice(index, 1);
+      selectedFolder = "默认";
+      selectedType = "all";
+    };
+    const visibleItems = () => items.filter(item => {
+      const folderMatch = selectedFolder === "全部" || item.folder === selectedFolder;
+      const typeMatch = selectedType === "all" || item.type === selectedType;
+      return folderMatch && typeMatch;
+    });
+    const typeIcon = (item, open) => {
+      if (item.type === "media") return open ? `<div class="thumb ${item.thumb}"></div>` : `<div class="thumb lock"></div>`;
+      if (item.type === "file") return `<div class="thumb file">文</div>`;
+      return `<div class="thumb text">T</div>`;
+    };
+    const chips = () => `<div class="chips">${folders.map(folder => `<div class="chip ${folder === selectedFolder ? "active" : ""}" data-folder="${folder}">${folder}</div>`).join("")}<div class="chip" data-action="new-folder">+ 文件夹</div></div>`;
+    const row = (item) => {
+      const open = revealedItems.has(item.id);
+      return `<div class="vault-row" data-id="${item.id}">${typeIcon(item, open)}<div class="row-copy"><strong>${item.title}</strong><span class="${open ? "" : "masked"}">${open ? item.meta : "********"}</span></div><button class="eye-btn" data-action="toggle-eye" data-id="${item.id}">${open ? eyeOpen : eyeClosed}</button></div>`;
+    };
+    const safeSvg = (klass = "safe-asset") => `<svg class="${klass}" viewBox="0 0 172 142" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="safeBody" x1="33" y1="10" x2="132" y2="128" gradientUnits="userSpaceOnUse"><stop stop-color="#68d8ff"/><stop offset=".55" stop-color="#2296f1"/><stop offset="1" stop-color="#0867d7"/></linearGradient>
+        <linearGradient id="safeDoor" x1="92" y1="31" x2="156" y2="102" gradientUnits="userSpaceOnUse"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#d7e4f1"/></linearGradient>
+        <linearGradient id="safePaper" x1="63" y1="38" x2="96" y2="93" gradientUnits="userSpaceOnUse"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#dbeeff"/></linearGradient>
+        <filter id="safeShadow" x="0" y="0" width="172" height="142" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feDropShadow dx="0" dy="14" stdDeviation="12" flood-color="#1670CF" flood-opacity=".22"/></filter>
+      </defs>
+      <g filter="url(#safeShadow)">
+        <path d="M26 37c0-14 11-25 25-25h68c14 0 25 11 25 25v64c0 14-11 25-25 25H51c-14 0-25-11-25-25V37z" fill="url(#safeBody)"/>
+        <path d="M44 42c0-7 6-13 13-13h69c7 0 13 6 13 13v58c0 7-6 13-13 13H57c-7 0-13-6-13-13V42z" fill="#0757BE" fill-opacity=".25"/>
+        <path d="M58 35h39c8 0 14 6 14 14v55H58V35z" fill="#0F62C9" fill-opacity=".45"/>
+        <path d="M64 33h34c8 0 14 6 14 14v54H64V33z" fill="url(#safePaper)"/>
+        <path d="M72 52h24M72 63h18M72 74h25" stroke="#23A4F4" stroke-width="5" stroke-linecap="round"/>
+        <path d="M105 26l49 14v74l-49-13V26z" fill="url(#safeDoor)" stroke="#A9B9CA" stroke-width="1.2"/>
+        <path d="M149 44h8M149 87h8" stroke="#8C9BAB" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="126" cy="72" r="17" fill="#E4ECF5" stroke="#9BAABC" stroke-width="3"/>
+        <circle cx="126" cy="72" r="7" fill="#CAD6E4"/>
+        <path d="M126 49v14M126 81v14M103 72h14M135 72h14M110 56l10 10M132 78l10 10M142 56l-10 10M120 78l-10 10" stroke="#8898AA" stroke-width="3" stroke-linecap="round"/>
+      </g>
+    </svg>`;
+
+    function entry() {
+      app.className = "screen me-bg";
+      app.innerHTML = `${status}<div class="gear"></div>
+        <div class="profile">
+          <div class="avatar"><div class="person-face"></div></div>
+          <div>
+            <h1>张凯 <span class="verify">✓ 已认证</span></h1>
+            <div class="pill-line"><span class="mini-pill">IP：长沙市</span><span class="mini-pill">家乡 · 长沙</span><span class="mini-pill">复旦大学邯郸校区</span></div>
+          </div>
+          <div style="font-size:40px;color:#7f8792">›</div>
+        </div>
+        <div class="stats"><div><strong>19</strong><span>我的关注</span></div><div><strong>6</strong><span>我的粉丝</span></div><div><strong>25</strong><span>记录天数</span></div></div>
+        <div class="entry-card"><h2>保险柜</h2><p>金融级加密，<br>你的私人数字金库</p><div class="blue-btn">去存储</div>${safeSvg()}</div>
+        <div class="menu-card single">
+          <div class="menu-row"><svg class="line-icon" viewBox="0 0 24 24" fill="none"><path d="M5 12a7 7 0 1014 0 7 7 0 00-14 0z" stroke="currentColor" stroke-width="2"/><path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><b>继承模式</b><span>›</span></div>
+        </div>
+        <div class="menu-card">
+          <div class="menu-row"><svg class="line-icon" viewBox="0 0 24 24" fill="none"><path d="M4 20V9l8-6 8 6v11" stroke="currentColor" stroke-width="2"/><path d="M9 20v-7h6v7" stroke="currentColor" stroke-width="2"/></svg><b>个人主页</b><span>›</span></div>
+          <div class="menu-row"><svg class="line-icon yellow" viewBox="0 0 24 24" fill="none"><path d="M12 21s-8-4.8-8-11a4.7 4.7 0 018-3.4A4.7 4.7 0 0120 10c0 6.2-8 11-8 11z" stroke="currentColor" stroke-width="2"/></svg><b>赞与收藏</b><span>›</span></div>
+          <div class="menu-row"><svg class="line-icon green" viewBox="0 0 24 24" fill="none"><path d="M9.1 9a3 3 0 115.8 1c-.6 1.2-1.9 1.6-2.5 2.6-.3.5-.4.9-.4 1.4" stroke="currentColor" stroke-width="2"/><path d="M12 18h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/></svg><b>帮助与反馈</b><span>›</span></div>
+        </div>
+        <div class="tabbar">
+          <div class="tab"><svg viewBox="0 0 24 24" fill="none"><path d="M5 11c0-4 3-7 7-7s7 3 7 7-3 9-7 9-7-5-7-9z" stroke="currentColor" stroke-width="2"/><path d="M9 11h.01M15 11h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg><span>记得吗</span></div>
+          <div class="tab"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l3 6 6 3-6 3-3 6-3-6-6-3 6-3 3-6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span>发现</span></div>
+          <div class="tab active"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12a7 7 0 1111 5.7L21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M8.5 13.5h6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span>我的</span></div>
+        </div><div class="compose"><svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M4 17v3h3L19 8l-3-3L4 17z" stroke="currentColor" stroke-width="2"/><path d="M14 20h6" stroke="#22cdb2" stroke-width="2" stroke-linecap="round"/></svg></div>`;
+    }
+
+    function unlock() {
+      app.className = "screen vault-bg";
+      const boxes = Array(6).fill(0).map((_,i)=>`<div class="passcode-box" style="width:42px;height:46px;border-radius:14px;background:#f1f4f8;border:${i===passcodeCount?"1.5px solid #22cdb2":"1px solid #e2e7ee"};display:grid;place-items:center">${i < passcodeCount ? `<span style="width:10px;height:10px;border-radius:50%;background:#1d2430"></span>` : ""}</div>`).join("");
+      app.innerHTML = `${nav("", "", back)}<div style="display:grid;place-items:center;padding-top:36px">${safeSvg("safe-asset unlock-safe")}<h1 style="font-size:28px;margin:24px 0 8px">输入密码</h1><p style="margin:0;color:#7e8794">输入密码后才能解锁保险柜内容</p><div class="passcode-row" style="display:flex;gap:9px;margin:36px 0 28px">${boxes}</div></div>${banner.replace("双重密码、银行级加密、异常拦截","点击查看安全说明")}<div data-action="forgot-password" style="text-align:center;color:#22bda6;font-size:16px;margin-top:26px">忘记密码？</div>`;
+    }
+    function forgotPassword() {
+      app.className = "screen vault-bg";
+      app.innerHTML = `${nav("忘记密码", "", back)}<div class="form-stack"><div class="form-card"><label>手机号</label><strong>186****2841</strong></div><div class="form-card code-card"><label>验证码</label><div class="code-placeholder">输入验证码</div><div class="code-action">59s 后重发</div></div><div class="sent-tip">验证码已自动发送到绑定手机，请输入短信验证码后继续。</div><div class="next-btn">下一步</div></div>`;
+    }
+    function list(open=false) {
+      app.className = "screen vault-bg";
+      if (open) revealedItems.add("backup");
+      const currentItems = visibleItems();
+      const rows = currentItems.length ? currentItems.map(row).join("") : `<div class="empty-state"><div class="empty-icon"></div><strong>暂无内容</strong><span>点击右上角 + 添加</span></div>`;
+      const title = selectedFolder === "全部" ? `共 ${currentItems.length} 项` : selectedFolder;
+      const folderActions = selectedFolder !== "全部" && selectedFolder !== "默认" ? `<span class="folder-delete" data-action="delete-folder">删除文件夹</span>` : "";
+      app.innerHTML = `${nav("保险柜", plus)}${banner}${chips()}<div class="list-title"><span>${title}</span><div class="folder-tools">${folderActions}<span class="filter" data-action="type-filter">${typeLabels[selectedType]}</span></div></div><div class="vault-list">${rows}</div>${revealedItems.size ? `<div class="hint">离开保险柜或锁屏后自动恢复隐藏</div>`:""}`;
+    }
+    function addSheet() {
+      list(false);
+      app.innerHTML += `<div class="sheet-scrim"></div><div class="bottom-sheet"><div class="grab"></div><div class="sheet-title">添加到 ${escapeHtml(uploadTargetFolder)}</div><div class="action" data-add-kind="text"><div class="action-icon">文</div><div><strong>添加图文</strong><small>调用现有编辑器，最多 9 张图</small></div></div><div class="action" data-add-kind="media"><div class="action-icon">图</div><div><strong>上传图片/视频</strong><small>选择后可改保存位置</small></div></div><div class="action" data-add-kind="file"><div class="action-icon">件</div><div><strong>上传文件</strong><small>系统选择后在此确认上传</small></div></div><div class="limit">单个文件不超过 500 MB</div></div>`;
+    }
+    function editor() {
+      app.className = "screen vault-bg";
+      app.innerHTML = `${status}<div class="editor-nav"><button class="icon-btn nav-left">${back}</button><div class="title" style="font-size:18px;text-align:left">私密图文 🔒</div><div class="editor-actions"><svg viewBox="0 0 24 24" fill="none"><path d="M9 8H4v5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 13a8 8 0 0113.7-5.7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><svg viewBox="0 0 24 24" fill="none"><path d="M15 8h5v5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 13A8 8 0 006.3 7.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><svg class="disabled" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div><div class="input-line">输入标题</div><div class="textarea">写下只属于自己的私密故事与心事...</div><div class="editor-toolbar"><div class="format-line">✎ 书签 话筒 B ≡ Aa</div><div class="tool-grid"><div class="tool"><div class="tool-icon">图</div>图片</div><div class="tool"><div class="tool-icon">拍</div>拍摄</div><div class="tool"><div class="tool-icon">格</div>格式</div><div class="tool"><div class="tool-icon">9</div>最多9张</div></div></div>`;
+    }
+    function mediaPicker() {
+      app.className = "screen picker-page";
+      if (!mediaFolderDraft) mediaFolderDraft = uploadFolderName();
+      const tiles = Array.from({ length: 12 }, (_, index) => {
+        const num = index + 1;
+        const on = mediaSelection.has(num);
+        return `<div class="media-tile ${num % 5 === 0 ? "video" : ""} ${on ? "on" : ""}" data-media="${num}"><div class="media-check">${on ? "✓" : ""}</div></div>`;
+      }).join("");
+      const folderName = currentMediaFolderName() || uploadFolderName();
+      const targetFolder = mediaCreateDatedFolder && mediaSelection.size > 1 ? folderName : uploadTargetFolder;
+      app.innerHTML = `${nav("选择图片/视频", `<span class="nav-confirm">确认</span>`)}<div style="padding:0 20px 10px;color:#7b8492;font-size:13px">可选择照片或视频，保存后在保险柜中默认隐藏预览。</div><div class="target-folder-row" data-action="choose-upload-folder"><div class="action-icon">夹</div><div><label>保存到</label><strong>${escapeHtml(targetFolder)}</strong></div><span style="color:#9aa3af">›</span></div><div class="media-folder-toggle" data-action="toggle-media-folder"><div class="square-check ${mediaCreateDatedFolder ? "on" : ""}">${mediaCreateDatedFolder ? "✓" : ""}</div><div><strong>多图新建文件夹存放</strong><span>勾选后使用下面的文件夹名</span><input class="media-folder-input" data-media-folder-input value="${escapeHtml(mediaFolderDraft)}" placeholder="例如：${uploadFolderName()}" /></div></div><div class="picker-grid">${tiles}</div><div class="picker-bottom"><span>已选 ${mediaSelection.size} 项</span><button class="picker-submit">添加到 ${escapeHtml(targetFolder)}</button></div>`;
+    }
+    function filePicker() {
+      app.className = "screen picker-page";
+      const fileRows = [
+        ["small", "小于500M文件.zip", "128 MB · 可以上传"],
+        ["large", "大于500M文件.mov", "682 MB · 超过单文件限制"]
+      ].map(([kind, title, desc]) => `<div class="file-choice selectable" data-file="${kind}"><div class="select-circle ${fileSelection.has(kind) ? "on" : ""}">${fileSelection.has(kind) ? "✓" : ""}</div><div class="thumb file">件</div><div><strong>${title}</strong><span>${desc}</span></div><span style="color:#9aa3af">›</span></div>`).join("");
+      const dialogCopy = fileDialog === "empty"
+        ? ["请选择文件", "请先勾选需要上传的文件，再点击右上角确认。"]
+        : ["文件超过 500 MB", "大于500M文件.mov 暂不支持上传，请选择 500 MB 以内的文件。"];
+      app.innerHTML = `${nav("选择文件", `<span class="nav-confirm">确认</span>`)}<div style="padding:0 20px 10px;color:#7b8492;font-size:13px">这里模拟系统文件选择后的二次确认，可勾选要加入保险柜的文件。</div><div class="target-folder-row" data-action="choose-upload-folder"><div class="action-icon">夹</div><div><label>保存到</label><strong>${escapeHtml(uploadTargetFolder)}</strong></div><span style="color:#9aa3af">›</span></div><div class="file-choice-list">${fileRows}<div style="color:#8a909b;font-size:13px;text-align:center;margin-top:16px">单个文件不超过 500 MB</div></div>${fileToast ? `<div class="toast">已添加到 ${escapeHtml(uploadTargetFolder)}</div>` : ""}${fileDialog ? `<div class="dialog"><div class="dialog-card"><strong>${dialogCopy[0]}</strong><p>${dialogCopy[1]}</p><button data-action="close-dialog">知道了</button></div></div>` : ""}`;
+    }
+    function folderCreate() {
+      if (folderCreateMode === "upload") {
+        (map[folderPickerReturn] || filePicker)();
+      } else {
+        list(false);
+      }
+      app.innerHTML += `<div class="sheet-scrim"></div><div class="bottom-sheet"><div class="grab"></div><div class="sheet-title">新建文件夹</div><div class="folder-label">文件夹名称</div><input class="folder-input" data-folder-input value="${escapeHtml(folderDraft)}" placeholder="例如：票据" maxlength="16" /><div class="folder-error ${folderError ? "show" : ""}">${escapeHtml(folderError)}</div><button class="sheet-primary" data-action="confirm-folder">创建文件夹</button></div>`;
+      setTimeout(() => document.querySelector("[data-folder-input]")?.focus(), 0);
+    }
+    function detail() {
+      app.className = "screen vault-bg";
+      const item = items.find(entry => entry.id === activeItemId) || items[0];
+      const tags = item.meta.split(" · ").map(part => `<span class="tag">${part}</span>`).join("");
+      const cover = item.type === "media" ? `<div class="detail-cover"><div style="width:128px;height:96px;border-radius:20px;background:linear-gradient(135deg,#c7f1e8,#eaf5ff);box-shadow:0 12px 30px rgba(45,155,247,.16)"></div></div>` : `<div class="detail-cover"><div class="doc-card"></div></div>`;
+      const body = item.body ? `<div class="detail-text">${item.body.replace(/\n/g, "<br>")}</div>` : "";
+      const imgs = item.type !== "file" ? `<div class="detail-imgs"><div></div><div></div></div>` : "";
+      app.innerHTML = `${nav("浏览详情", more)}<div class="detail-card">${cover}<div class="detail-body"><h2>${item.title}</h2><div class="tags">${tags}</div>${body}${imgs}</div></div>`;
+    }
+    function detailMenu() {
+      detail();
+      const item = items.find(entry => entry.id === activeItemId) || items[0];
+      const primaryAction = item?.type === "text"
+        ? `<div class="action"><div class="action-icon">编</div><div><strong>编辑图文</strong><small>回到编辑器修改内容</small></div></div>`
+        : `<div class="action"><div class="action-icon">名</div><div><strong>重命名</strong><small>修改标题名称</small></div></div>`;
+      app.innerHTML += `<div class="sheet-scrim"></div><div class="bottom-sheet"><div class="grab"></div><div class="sheet-title">管理内容</div>${primaryAction}<div class="action"><div class="action-icon">移</div><div><strong>移动文件夹</strong><small>选择目标文件夹</small></div></div><div class="action"><div class="action-icon" style="color:#d94747;background:#fff0f0">删</div><div><strong>删除</strong><small>删除后不可恢复</small></div></div></div>`;
+    }
+    function batch() {
+      app.className = "screen vault-bg";
+      const batchRows = items.slice(0, 5).map((item) => `<div class="vault-row batch-row"><div class="check ${batchSelectedIds.includes(item.id) ? "on" : ""}"></div>${typeIcon(item, false)}<div class="row-copy"><strong>${item.title}</strong><span class="masked">********</span></div></div>`).join("");
+      app.innerHTML = `${nav("批量管理", "×")}<div style="margin:8px 20px 12px;background:#14325b;color:#fff;border-radius:16px;padding:12px 14px;font-size:15px">已选择 2 项</div><div class="vault-list">${batchRows}</div><div class="batch-actions"><div class="move">移动</div><div class="delete">删除</div></div>`;
+    }
+    function security() {
+      app.className = "screen security-page";
+      app.innerHTML = `${nav("安全说明", "", back)}<div class="security-hero"><div class="big-shield"><div class="shield"></div></div></div>${[["双重密码，筑牢安全第一道防线","独立保险柜密码与二次验证，防止未授权操作。"],["银行级加密，数据全程不裸奔","敏感信息加密存储，仅本人验证后可查看。"],["全链路防护，降低泄露风险","默认脱敏显示，离开或锁屏后自动恢复隐藏。"],["合规承诺，隐私绝不越界","只收集功能所需最小信息，删除后不可恢复。"]].map((c,i)=>`<div class="security-card"><strong>${i+1}. ${c[0]}</strong><p>${c[1]}</p></div>`).join("")}`;
+    }
+    function moveFolder() {
+      list(false);
+      const folderActions = folders.filter(folder => folder !== "全部").map(folder => `<div class="action" data-move-folder="${escapeHtml(folder)}"><div class="action-icon">夹</div><div><strong>${escapeHtml(folder)}</strong><small>移动到这个文件夹</small></div></div>`).join("");
+      app.innerHTML += `<div class="sheet-scrim"></div><div class="bottom-sheet"><div class="grab"></div><div class="sheet-title">移动到文件夹</div>${folderActions}</div>`;
+    }
+    function uploadFolderSheet() {
+      (map[folderPickerReturn] || filePicker)();
+      const folderActions = folders.filter(folder => folder !== "全部").map(folder => `<div class="action" data-upload-folder="${escapeHtml(folder)}"><div class="action-icon">夹</div><div><strong>${escapeHtml(folder)}</strong><small>${folder === uploadTargetFolder ? "当前保存位置" : "保存到这个文件夹"}</small></div></div>`).join("");
+      app.innerHTML += `<div class="sheet-scrim"></div><div class="bottom-sheet"><div class="grab"></div><div class="sheet-title">选择保存位置</div>${folderActions}<div class="action" data-action="new-upload-folder"><div class="action-icon">＋</div><div><strong>新建文件夹</strong><small>创建后作为本次上传位置</small></div></div></div>`;
+    }
+    function renameSheet() {
+      detail();
+      app.innerHTML += `<div class="sheet-scrim"></div><div class="bottom-sheet"><div class="grab"></div><div class="sheet-title">重命名</div><div class="folder-label">标题名称</div><input class="folder-input" data-rename-input value="${escapeHtml(renameDraft)}" placeholder="输入标题" maxlength="24" /><div class="folder-error ${renameError ? "show" : ""}">${escapeHtml(renameError)}</div><button class="sheet-primary" data-action="confirm-rename">保存</button></div>`;
+      setTimeout(() => document.querySelector("[data-rename-input]")?.focus(), 0);
+    }
+    function typeSheet() {
+      list(false);
+      const options = [
+        ["all", "全部类型", "展示所有内容"],
+        ["media", "图片/视频", "只看上传的图片和视频"],
+        ["text", "图文", "只看图文内容"],
+        ["file", "文件", "只看文件内容"]
+      ].map(([value, label, desc]) => `<div class="action" data-type-filter="${value}"><div class="action-icon">${selectedType === value ? "✓" : "筛"}</div><div><strong>${label}</strong><small>${desc}</small></div></div>`).join("");
+      app.innerHTML += `<div class="sheet-scrim"></div><div class="bottom-sheet"><div class="grab"></div><div class="sheet-title">筛选类型</div>${options}</div>`;
+    }
+    function deleteConfirm() {
+      if (deleteSource === "batch") batch();
+      else if (deleteSource === "folder") list(false);
+      else detail();
+      const copy = deleteSource === "folder"
+        ? ["删除文件夹", "删除文件夹后，文件夹内内容将移动到默认文件夹。"]
+        : ["确认删除", "删除后不可恢复。"];
+      app.innerHTML += `<div class="dialog"><div class="dialog-card"><strong>${copy[0]}</strong><p>${copy[1]}</p><div class="dialog-actions"><button class="secondary" data-action="cancel-delete">取消</button><button class="danger" data-action="confirm-delete">确认删除</button></div></div></div>`;
+    }
+    const map = { entry, unlock, forgotPassword, list:()=>list(false), reveal:()=>list(true), addSheet, editor, mediaPicker, filePicker, folderCreate, detail, detailMenu, batch, moveFolder, uploadFolderSheet, renameSheet, security, typeSheet, deleteConfirm };
+    const fallbackBack = {
+      unlock: "entry",
+      forgotPassword: "unlock",
+      list: "entry",
+      reveal: "list",
+      addSheet: "list",
+      editor: "list",
+      mediaPicker: "addSheet",
+      filePicker: "list",
+      uploadFolderSheet: "filePicker",
+      folderCreate: "list",
+      detail: "list",
+      detailMenu: "detail",
+      batch: "list",
+      moveFolder: "batch",
+      renameSheet: "detailMenu",
+      security: "list",
+      typeSheet: "list",
+      deleteConfirm: "list"
+    };
+
+    function render(screenName = currentScreen, push = false) {
+      currentScreen = map[screenName] ? screenName : "entry";
+      if (currentScreen !== "unlock") passcodeCount = 0;
+      map[currentScreen]();
+      const url = new URL(location.href);
+      url.searchParams.set("screen", currentScreen);
+      if (push) {
+        routeStack.push(currentScreen);
+        history.pushState({ screen: currentScreen }, "", url);
+      } else {
+        history.replaceState({ screen: currentScreen }, "", url);
+      }
+    }
+
+    function go(screenName) {
+      render(screenName, screenName !== currentScreen);
+    }
+
+    function backRoute() {
+      if (currentScreen === "list" || currentScreen === "reveal") {
+        revealedItems.clear();
+        routeStack = [currentScreen];
+        go("entry");
+        return;
+      }
+      if (currentScreen === "filePicker") {
+        fileSelection.clear();
+        fileDialog = "";
+        fileToast = false;
+        routeStack = ["list"];
+        go("list");
+        return;
+      }
+      if (routeStack.length > 1) {
+        routeStack.pop();
+        render(routeStack[routeStack.length - 1], false);
+        return;
+      }
+      go(fallbackBack[currentScreen] || "entry");
+    }
+
+    app.addEventListener("input", (event) => {
+      if (currentScreen === "folderCreate" && event.target.matches("[data-folder-input]")) {
+        folderDraft = event.target.value;
+        if (folderError) {
+          folderError = "";
+          const errorNode = app.querySelector(".folder-error");
+          if (errorNode) {
+            errorNode.textContent = "";
+            errorNode.classList.remove("show");
+          }
+        }
+      }
+      if (currentScreen === "renameSheet" && event.target.matches("[data-rename-input]")) {
+        renameDraft = event.target.value;
+        if (renameError) {
+          renameError = "";
+          const errorNode = app.querySelector(".folder-error");
+          if (errorNode) {
+            errorNode.textContent = "";
+            errorNode.classList.remove("show");
+          }
+        }
+      }
+      if (currentScreen === "mediaPicker" && event.target.matches("[data-media-folder-input]")) {
+        mediaFolderDraft = event.target.value;
+      }
+    });
+
+    app.addEventListener("click", (event) => {
+      const target = event.target;
+      if (longPressFired) {
+        const shouldSwallow = !!target.closest(".vault-row");
+        longPressFired = false;
+        if (shouldSwallow) return;
+      }
+      if (target.closest(".nav-left")) return backRoute();
+      if (target.closest(".security-banner")) return go("security");
+      if (currentScreen === "deleteConfirm" && target.closest("[data-action='cancel-delete']")) {
+        if (deleteSource === "batch") return go("batch");
+        if (deleteSource === "folder") return go("list");
+        return go("detailMenu");
+      }
+      if (currentScreen === "deleteConfirm" && target.closest("[data-action='confirm-delete']")) {
+        if (deleteSource === "batch") removeItemIds(batchSelectedIds);
+        else if (deleteSource === "folder") deleteCustomFolder(deleteFolderName);
+        else removeItemIds([activeItemId]);
+        deleteSource = "detail";
+        deleteFolderName = "";
+        return go("list");
+      }
+      if (currentScreen === "entry" && target.closest(".entry-card")) return go("unlock");
+      if (currentScreen === "unlock" && target.closest(".passcode-box")) {
+        passcodeCount += 1;
+        if (passcodeCount >= 6) return go("list");
+        return render("unlock", false);
+      }
+      if (currentScreen === "unlock" && target.closest("[data-action='forgot-password']")) return go("forgotPassword");
+      if ((currentScreen === "list" || currentScreen === "reveal") && target.closest(".nav-right")) {
+        uploadTargetFolder = targetContentFolder();
+        folderPickerReturn = "addSheet";
+        folderCreateMode = "list";
+        fileSelection.clear();
+        fileDialog = "";
+        return go("addSheet");
+      }
+      if ((currentScreen === "list" || currentScreen === "reveal") && target.closest("[data-action='new-folder']")) {
+        folderCreateMode = "list";
+        folderDraft = "";
+        folderError = "";
+        return go("folderCreate");
+      }
+      if ((currentScreen === "list" || currentScreen === "reveal") && target.closest("[data-action='delete-folder']")) {
+        deleteSource = "folder";
+        deleteFolderName = selectedFolder;
+        return go("deleteConfirm");
+      }
+      if ((currentScreen === "list" || currentScreen === "reveal") && target.closest("[data-action='type-filter']")) return go("typeSheet");
+      if ((currentScreen === "list" || currentScreen === "reveal") && target.closest("[data-folder]")) {
+        selectedFolder = target.closest("[data-folder]").dataset.folder;
+        return render("list", false);
+      }
+      if ((currentScreen === "list" || currentScreen === "reveal") && target.closest("[data-action='toggle-eye']")) {
+        const id = target.closest("[data-action='toggle-eye']").dataset.id;
+        if (revealedItems.has(id)) revealedItems.delete(id);
+        else revealedItems.add(id);
+        return render("list", false);
+      }
+      if ((currentScreen === "list" || currentScreen === "reveal") && target.closest(".vault-row")) {
+        activeItemId = target.closest(".vault-row").dataset.id || activeItemId;
+        return go("detail");
+      }
+      if (currentScreen === "addSheet" && target.closest(".sheet-scrim")) return go("list");
+      if (currentScreen === "addSheet" && target.closest(".action")) {
+        const addKind = target.closest(".action").dataset.addKind;
+        if (addKind === "text") {
+          editorSource = "add";
+          return go("editor");
+        }
+        if (addKind === "media") {
+          folderPickerReturn = "mediaPicker";
+          mediaCreateDatedFolder = false;
+          if (!mediaFolderDraft) mediaFolderDraft = uploadFolderName();
+          return go("mediaPicker");
+        }
+        if (addKind === "file") {
+          folderPickerReturn = "filePicker";
+          fileSelection.clear();
+          fileDialog = "";
+          return go("filePicker");
+        }
+        return go("list");
+      }
+      if (currentScreen === "mediaPicker" && target.closest(".media-tile")) {
+        const id = Number(target.closest(".media-tile").dataset.media);
+        if (mediaSelection.has(id)) mediaSelection.delete(id);
+        else if (mediaSelection.size < 9) mediaSelection.add(id);
+        return render("mediaPicker", false);
+      }
+      if (currentScreen === "mediaPicker" && target.matches("[data-media-folder-input]")) return;
+      if (currentScreen === "mediaPicker" && target.closest("[data-action='toggle-media-folder']")) {
+        mediaCreateDatedFolder = !mediaCreateDatedFolder;
+        if (mediaCreateDatedFolder && !mediaFolderDraft) mediaFolderDraft = uploadFolderName();
+        return render("mediaPicker", false);
+      }
+      if (currentScreen === "mediaPicker" && target.closest("[data-action='choose-upload-folder']")) {
+        folderPickerReturn = "mediaPicker";
+        return go("uploadFolderSheet");
+      }
+      if (currentScreen === "mediaPicker" && (target.closest(".picker-submit") || target.closest(".nav-right"))) {
+        const targetFolder = mediaCreateDatedFolder && mediaSelection.size > 1 ? (currentMediaFolderName() || uploadFolderName()) : uploadTargetFolder;
+        ensureFolder(targetFolder);
+        selectedType = "all";
+        selectedFolder = targetFolder;
+        const uploadId = `upload-${targetFolder}`;
+        if (!items.some(item => item.id === uploadId)) {
+          items.unshift({
+            id: uploadId,
+            title: "上传图片/视频",
+            type: "media",
+            folder: targetFolder,
+            meta: `图片/视频 · ${mediaSelection.size}项 · ${targetFolder} · 今天`,
+            thumb: "photo",
+            body: "刚刚上传的图片/视频，默认以锁图标保护预览。"
+          });
+        }
+        revealedItems.delete("idcard");
+        return go("list");
+      }
+      if (currentScreen === "filePicker" && target.closest("[data-action='close-dialog']")) {
+        fileDialog = "";
+        return render("filePicker", false);
+      }
+      if (currentScreen === "filePicker" && target.closest("[data-action='choose-upload-folder']")) {
+        folderPickerReturn = "filePicker";
+        return go("uploadFolderSheet");
+      }
+      if (currentScreen === "filePicker" && target.closest(".file-choice")) {
+        const fileKind = target.closest(".file-choice").dataset.file;
+        if (fileSelection.has(fileKind)) fileSelection.delete(fileKind);
+        else fileSelection.add(fileKind);
+        fileDialog = "";
+        return render("filePicker", false);
+      }
+      if (currentScreen === "filePicker" && target.closest(".nav-right")) {
+        if (!fileSelection.size) {
+          fileDialog = "empty";
+          return render("filePicker", false);
+        }
+        if (fileSelection.has("large")) {
+          fileDialog = "large";
+          fileToast = false;
+          return render("filePicker", false);
+        }
+        const fileTargetFolder = uploadTargetFolder;
+        ensureFolder(fileTargetFolder);
+        if (!items.some(item => item.id === `file-${fileTargetFolder}`)) {
+          items.unshift({
+            id: `file-${fileTargetFolder}`,
+            title: "小于500M文件.zip",
+            type: "file",
+            folder: fileTargetFolder,
+            meta: `ZIP · 128 MB · ${fileTargetFolder} · 今天`,
+            body: "文件名：小于500M文件.zip\n大小：128 MB\n状态：已加密保存。"
+          });
+        }
+        fileSelection.clear();
+        fileDialog = "";
+        selectedFolder = fileTargetFolder;
+        selectedType = "all";
+        return go("list");
+      }
+      if (currentScreen === "uploadFolderSheet" && target.closest(".sheet-scrim")) return go(folderPickerReturn);
+      if (currentScreen === "uploadFolderSheet" && target.closest("[data-upload-folder]")) {
+        uploadTargetFolder = target.closest("[data-upload-folder]").dataset.uploadFolder || "默认";
+        if (folderPickerReturn === "mediaPicker") mediaCreateDatedFolder = false;
+        return go(folderPickerReturn);
+      }
+      if (currentScreen === "uploadFolderSheet" && target.closest("[data-action='new-upload-folder']")) {
+        folderCreateMode = "upload";
+        folderDraft = "";
+        folderError = "";
+        return go("folderCreate");
+      }
+      if (currentScreen === "folderCreate" && target.closest(".sheet-scrim")) {
+        folderDraft = "";
+        folderError = "";
+        const returnScreen = folderCreateMode === "upload" ? folderPickerReturn : "list";
+        folderCreateMode = "list";
+        return go(returnScreen);
+      }
+      if (currentScreen === "folderCreate" && target.closest("[data-action='confirm-folder']")) {
+        const folderName = normalizeFolderName(folderDraft);
+        if (!folderName) {
+          folderError = "请输入文件夹名称";
+          return render("folderCreate", false);
+        }
+        if (folderName === "全部" || folderExists(folderName)) {
+          folderError = "已有同名文件夹";
+          return render("folderCreate", false);
+        }
+        folders.push(folderName);
+        if (folderCreateMode === "upload") {
+          uploadTargetFolder = folderName;
+          if (folderPickerReturn === "mediaPicker") mediaCreateDatedFolder = false;
+          folderCreateMode = "list";
+          folderDraft = "";
+          folderError = "";
+          return go(folderPickerReturn);
+        }
+        selectedFolder = folderName;
+        selectedType = "all";
+        folderDraft = "";
+        folderError = "";
+        return go("list");
+      }
+      if (currentScreen === "typeSheet" && target.closest(".sheet-scrim")) return go("list");
+      if (currentScreen === "typeSheet" && target.closest("[data-type-filter]")) {
+        selectedType = target.closest("[data-type-filter]").dataset.typeFilter;
+        return go("list");
+      }
+      if (currentScreen === "editor" && target.closest(".editor-actions")) {
+        if (editorSource === "add") {
+          const folder = uploadTargetFolder || targetContentFolder();
+          ensureFolder(folder);
+          if (!items.some(item => item.id === `text-${folder}`)) {
+            items.unshift({
+              id: `text-${folder}`,
+              title: "私密图文",
+              type: "text",
+              folder,
+              meta: `图文 · 0字 · 0张图 · ${folder} · 今天`,
+              body: "刚刚保存的图文内容，支持文字与最多 9 张图。"
+            });
+          }
+          selectedFolder = folder;
+          selectedType = "all";
+          return go("list");
+        }
+        return go("detail");
+      }
+      if (currentScreen === "detail" && target.closest(".nav-right")) return go("detailMenu");
+      if (currentScreen === "detailMenu" && target.closest(".sheet-scrim")) return go("detail");
+      if (currentScreen === "detailMenu" && target.closest(".action")) {
+        const text = target.closest(".action").textContent;
+        if (text.includes("编辑")) {
+          editorSource = "edit";
+          return go("editor");
+        }
+        if (text.includes("重命名")) {
+          const item = items.find(entry => entry.id === activeItemId);
+          renameDraft = item?.title || "";
+          renameError = "";
+          return go("renameSheet");
+        }
+        if (text.includes("移动")) {
+          moveSource = "detail";
+          return go("moveFolder");
+        }
+        if (text.includes("删除")) {
+          deleteSource = "detail";
+          return go("deleteConfirm");
+        }
+        return go("detail");
+      }
+      if (currentScreen === "batch" && target.closest(".move")) {
+        moveSource = "batch";
+        return go("moveFolder");
+      }
+      if (currentScreen === "batch" && target.closest(".delete")) {
+        deleteSource = "batch";
+        return go("deleteConfirm");
+      }
+      if (currentScreen === "moveFolder" && target.closest(".sheet-scrim")) return go("list");
+      if (currentScreen === "moveFolder" && target.closest("[data-move-folder]")) {
+        const folderName = target.closest("[data-move-folder]").dataset.moveFolder || "默认";
+        if (!folders.includes(folderName)) return go("list");
+        const ids = moveSource === "detail" ? [activeItemId] : batchSelectedIds;
+        moveItemsToFolder(ids, folderName);
+        return go("list");
+      }
+      if (currentScreen === "renameSheet" && target.closest(".sheet-scrim")) return go("detailMenu");
+      if (currentScreen === "renameSheet" && target.closest("[data-action='confirm-rename']")) {
+        const nextTitle = normalizeFolderName(renameDraft);
+        if (!nextTitle) {
+          renameError = "请输入标题名称";
+          return render("renameSheet", false);
+        }
+        const item = items.find(entry => entry.id === activeItemId);
+        if (item) item.title = nextTitle;
+        renameDraft = "";
+        renameError = "";
+        return go("detail");
+      }
+    });
+
+    app.addEventListener("pointerdown", (event) => {
+      if (!(currentScreen === "list" || currentScreen === "reveal")) return;
+      if (event.target.closest(".eye-btn")) return;
+      if (!event.target.closest(".vault-row")) return;
+      clearTimeout(pressTimer);
+      longPressFired = false;
+      pressTimer = setTimeout(() => {
+        longPressFired = true;
+        go("batch");
+      }, 520);
+    });
+
+    ["pointerup", "pointercancel", "pointerleave"].forEach((type) => {
+      app.addEventListener(type, () => clearTimeout(pressTimer));
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (currentScreen !== "unlock") return;
+      if (/^\d$/.test(event.key)) {
+        passcodeCount += 1;
+        if (passcodeCount >= 6) return go("list");
+        return render("unlock", false);
+      }
+      if (event.key === "Backspace") {
+        passcodeCount = Math.max(0, passcodeCount - 1);
+        return render("unlock", false);
+      }
+    });
+
+    window.addEventListener("popstate", () => {
+      const nextScreen = new URLSearchParams(location.search).get("screen") || "entry";
+      routeStack = [nextScreen];
+      render(nextScreen, false);
+    });
+
+    render(initialScreen, false);
+  </script>
+</body>
+</html>
